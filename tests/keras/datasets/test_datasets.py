@@ -4,6 +4,7 @@ import time
 import random
 from keras.datasets import cifar10
 from keras.datasets import cifar100
+from keras.datasets import conll2000
 from keras.datasets import reuters
 from keras.datasets import imdb
 from keras.datasets import mnist
@@ -73,6 +74,14 @@ def test_boston_housing():
         (x_train, y_train), (x_test, y_test) = boston_housing.load_data()
         assert len(x_train) == len(y_train)
         assert len(x_test) == len(y_test)
+
+
+def test_conll2000():
+    # only run data download tests 20% of the time
+    # to speed up frequent testing
+    random.seed(time.time())
+    if random.random() > 0.8:
+        (X_words, train, y_train), (X_test, X_pos_train, y_test), (index2word, index2pos, index2chunk) = conll2000.load_data()
 
 
 if __name__ == '__main__':

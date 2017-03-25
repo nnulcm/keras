@@ -966,6 +966,26 @@ def gather(reference, indices):
     return tf.gather(reference, indices)
 
 
+def batch_gather(reference, indices):
+    '''Batchwise gathering of row indices.
+
+    The numpy equivalent is reference[np.arange(batch_size), indices].
+
+    # Arguments
+        reference: tensor with ndim >= 2 of shape
+          (batch_size, dim1, dim2, ..., dimN)
+        indices: 1d integer tensor of shape (batch_size) satisfiying
+          0 <= i < dim2 for each element i.
+
+    # Returns
+        A tensor with shape (batch_size, dim2, ..., dimN)
+        equal to reference[1:batch_size, indices]
+    '''
+    batch_size = shape(reference)[0]
+    indices = tf.stack([tf.range(batch_size), indices], axis=1)
+    return tf.gather_nd(reference, indices)
+
+
 # ELEMENT-WISE OPERATIONS
 
 def _normalize_axis(axis, ndim):
@@ -1042,6 +1062,12 @@ def sum(x, axis=None, keepdims=False):
     """
     axis = _normalize_axis(axis, ndim(x))
     return tf.reduce_sum(x, reduction_indices=axis, keep_dims=keepdims)
+
+
+def logsumexp(x, axis=None):
+    '''Returns `log(sum(exp(x), axis=axis))` with improved numerical stability.
+    '''
+    return tf.reduce_logsumexp(x, reduction_indices=[axis])
 
 
 def prod(x, axis=None, keepdims=False):

@@ -5,4 +5,5 @@ from . import imdb
 from . import reuters
 from . import cifar10
 from . import cifar100
+from . import conll2000
 from . import boston_housing
